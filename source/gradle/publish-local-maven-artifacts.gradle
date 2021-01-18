@@ -47,7 +47,12 @@ publishing {
     }
     repositories {
         maven {
-            url = "${project.rootDir}/../releases"
+            name = "neasaa"
+            url = uri(PACKAGE_REPO_URL)
+            credentials {
+                username = PACKAGE_REPO_USER_NAME
+                password = System.getenv("TOKEN")
+            }
         }
     }
 }
