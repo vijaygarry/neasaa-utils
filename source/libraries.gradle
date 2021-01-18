@@ -1,0 +1,8 @@
+//This file list out all the jars required by this library
+
+// Note: All these jars are not included in all project default Need to use these library name.
+ext.libraries = [
+    //Logging Jars
+    slf4jApi: "org.slf4j:slf4j-api:1.7.30@jar",
+    commonsIo: "commons-io:commons-io:2.8.0@jar"
+]

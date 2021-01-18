@@ -1,0 +1,55 @@
+apply plugin: 'maven-publish'
+
+task sourceJar (type: Jar) {
+	baseName = BASE_JAR_NAME
+	classifier 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives jar
+	archives sourceJar
+}
+
+publishing {
+	 publications {
+        neasaaMaven(MavenPublication) {
+            groupId = POM_GROUP_ID
+            artifactId = POM_ARTIFACT_ID
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = POM_ARTIFACT_ID
+                description = 'A utility library'
+                url = 'http://www.neasaa.com/'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'vijaygarry'
+                        name = 'Vijay Garothaya'
+                        email = 'vijay_garry@hotmail.com'
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "${project.rootDir}/releases"
+        }
+    }
+}
+
+publish.dependsOn(jar, sourceJar, generatePomFileForNeasaaMavenPublication)

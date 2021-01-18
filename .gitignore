@@ -1,5 +1,9 @@
-.gradle
-/build/
+source/.gradle
+source/components/utils/.settings
+source/components/utils/.classpath
+source/components/utils/.project
+source/components/utils/bin
+build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
