@@ -1,2 +1,7 @@
 # neasaa-utils
-Basic utility classes
+This project has following utilities 
+- DateUtils
+- FileUtils
+- StringUtils
+- ClassPathUtils
+- BaseConfig
