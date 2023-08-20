@@ -1,0 +1,23 @@
+apply from: "${rootDir}/gradle/publish-local-maven-artifacts.gradle"
+
+
+compileJava.dependsOn(checkVersion)
+
+jar {
+    archiveBaseName = BASE_JAR_NAME
+}
+
+dependencies {
+	implementation libraries.logger
+    implementation libraries.postgresql
+    implementation libraries.commons
+    implementation project(':components:utils')
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+eclipse.project.name = BASE_JAR_NAME
