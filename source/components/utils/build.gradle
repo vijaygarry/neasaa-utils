@@ -3,13 +3,25 @@ apply from: "${rootDir}/gradle/publish-local-maven-artifacts.gradle"
 
 compileJava.dependsOn(checkVersion)
 
+/*
+compile -> implementation
+runtime -> runtimeOnly
+testCompile -> testImplementation
+testRuntime -> testRuntimeOnly
+*/
+
+
 jar {
-    baseName = BASE_JAR_NAME
+    archiveBaseName = BASE_JAR_NAME
 }
 
 dependencies {
-	compile libraries.slf4jApi
-	compile libraries.commonsIo
+	implementation (libraries.slf4jApi)
+	compileOnly (libraries.lombok)
+    implementation (libraries.commonsIo)
+    implementation (libraries.jackson)
+    implementation (libraries.excel)
+    implementation (libraries.csvParser)
 }
 
 javadoc {

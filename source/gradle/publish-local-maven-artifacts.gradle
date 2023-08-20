@@ -1,6 +1,6 @@
 apply plugin: 'maven-publish'
-
-task sourceJar (type: Jar) {
+/*
+task sourceJar (type: Jar, dependsOn: classes) {
 	baseName = BASE_JAR_NAME
 	classifier 'sources'
 	from sourceSets.main.allSource
@@ -58,3 +58,5 @@ publishing {
 }
 
 publish.dependsOn(jar, sourceJar, generatePomFileForNeasaaMavenPublication)
+
+*/

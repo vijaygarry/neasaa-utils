@@ -8,13 +8,21 @@ allprojects {
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 	apply plugin: 'distribution'
+	//apply plugin: 'maven'
 
-	sourceCompatibility = 1.8
-	targetCompatibility = 1.8
+	//sourceCompatibility = 18
+	//targetCompatibility = 18
 	
 	
 	repositories {
     	mavenCentral()
+		maven {
+            url = uri(PACKAGE_REPO_URL)
+            credentials {
+                username = PACKAGE_REPO_USER_NAME
+                password = System.getenv("TOKEN")
+            }
+        }
 	}
 
 	task checkVersion {
@@ -26,6 +34,8 @@ allprojects {
 	}
 
 	project.ext.hasVersion = { prop ->
-		return project.hasProperty("${prop}") && project[prop] && project[prop] != project.DEFAULT_VERSION
+		return project.hasProperty("${prop}") 
+				&& project[prop] 
+				&& project[prop] != project.DEFAULT_VERSION
 	}
 }

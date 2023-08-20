@@ -1,8 +1,45 @@
-//This file list out all the jars required by this library
+//This file list out all the jars required by this application
 
+// Define list of jars to be used by application
 // Note: All these jars are not included in all project default Need to use these library name.
+
+
 ext.libraries = [
-    //Logging Jars
-    slf4jApi: "org.slf4j:slf4j-api:1.7.30@jar",
-    commonsIo: "commons-io:commons-io:2.8.0@jar"
+    
+    lombok: "org.projectlombok:lombok:1.18.28@jar",
+    slf4jApi: "org.slf4j:slf4j-api:2.0.7@jar",
+    slf4jImpl: "org.apache.logging.log4j:log4j-slf4j-impl:2.14.0@jar",
+	apacheLogApi : "org.apache.logging.log4j:log4j-api:2.14.0@jar",
+	apacheLogCore: "org.apache.logging.log4j:log4j-core:2.14.0@jar",
+    
+    commonsIo: "commons-io:commons-io:2.8.0@jar",
+    postgresql: "org.postgresql:postgresql:42.6.0",
+
+    jackson: [
+        "com.fasterxml.jackson.core:jackson-core:2.15.2",
+        "com.fasterxml.jackson.core:jackson-databind:2.15.2"
+    ],
+    excel: [
+        "org.apache.poi:poi:5.2.3",
+        "org.apache.poi:poi-ooxml:5.2.3"
+    ],
+    csvParser: [
+        "org.apache.commons:commons-csv:1.10.0"
+    ]
 ]
+
+
+
+// Grouping jars for easy reference.
+libraries << [
+    logger: [
+		libraries.slf4jApi,
+		libraries.slf4jImpl,
+		libraries.apacheLogApi,
+		libraries.apacheLogCore
+	],
+    commons: [
+		libraries.commonsIo
+	],
+]
+
