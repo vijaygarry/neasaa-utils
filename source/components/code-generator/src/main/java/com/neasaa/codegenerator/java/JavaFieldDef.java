@@ -55,6 +55,7 @@ public class JavaFieldDef {
 	public JavaFieldDef(String aDataType, String aFieldName) {
 		this("private",aDataType, aFieldName);
 	}
+	
 	/**
 	 * Sequence of modifers are as follows:
 	 * static <br>
@@ -132,12 +133,19 @@ public class JavaFieldDef {
 	
 	public String getGetterMethodName () {
 		String capitalizeFieldName = StringUtils.capitalize(this.fieldName);
+		if(dataType.equalsIgnoreCase("boolean")) {
+			return "is" + capitalizeFieldName;
+		}
 		return "get" + capitalizeFieldName;
 	}
 	
 	public String getSetterMethodName () {
 		String capitalizeFieldName = StringUtils.capitalize(this.fieldName);
 		return "set" + capitalizeFieldName ;
+	}
+	
+	public String getDataType() {
+		return dataType;
 	}
 		
 }

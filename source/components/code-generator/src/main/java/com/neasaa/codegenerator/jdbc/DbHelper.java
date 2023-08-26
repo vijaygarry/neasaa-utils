@@ -12,7 +12,7 @@ public class DbHelper {
 
 	// -------------------------------------------------------------------------
 	public static Connection getDbConnection() throws Exception {
-		DriverManager.registerDriver((Driver) Class.forName(BaseConfig.getProperty("DB.DRIVER")).newInstance());
+		DriverManager.registerDriver((Driver) Class.forName(BaseConfig.getProperty("DB.DRIVER")).getDeclaredConstructor().newInstance());
 		return DriverManager.getConnection(BaseConfig.getProperty("DB.URL"), BaseConfig.getProperty("DB.USER"),
 				BaseConfig.getProperty("DB.PASSWORD"));
 	}

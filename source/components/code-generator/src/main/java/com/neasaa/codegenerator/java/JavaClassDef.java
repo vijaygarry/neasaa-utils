@@ -17,6 +17,8 @@ public class JavaClassDef {
 	private String parentClass;
 	private List<JavaFieldDef> fields;
 	private List<JavaMethodDef> methods = new ArrayList<>();
+	private boolean useLombokAnnotationForGetter = false;
+	private boolean useLombokAnnotationForSetter = false;
 	
 	public String getHeader() {
 		return this.header;
@@ -73,7 +75,16 @@ public class JavaClassDef {
 	public List<JavaMethodDef> getMethods() {
 		return this.methods;
 	}
-
+	public void setUseLombokAnnotationForGetter(boolean useLombokAnnotationForGetter) {
+		this.useLombokAnnotationForGetter = useLombokAnnotationForGetter;
+		this.importClasses.add("lombok.Getter");
+	}
+	
+	public void setUseLombokAnnotationForSetter(boolean useLombokAnnotationForSetter) {
+		this.useLombokAnnotationForSetter = useLombokAnnotationForSetter;
+		this.importClasses.add("lombok.Setter");
+	}
+	
 	public void addImportClass (String aQualifiedClassName) {
 		this.importClasses.add(aQualifiedClassName);
 	}
@@ -139,6 +150,12 @@ public class JavaClassDef {
 	}
 	
 	protected void appendClassDeclaration (StringBuilder sb) {
+		if(useLombokAnnotationForGetter) {
+			sb.append("@Getter").append(StringUtils.NEW_LINE);
+		}
+		if(useLombokAnnotationForSetter) {
+			sb.append("@Setter").append(StringUtils.NEW_LINE);
+		}
 		sb.append("public class ").append(this.className);	
 		
 		if(!StringUtils.isEmpty(this.parentClass)) {
@@ -178,10 +195,17 @@ public class JavaClassDef {
 		if(aFields == null || aFields.size() ==0) {
 			return "";
 		}
+		if(useLombokAnnotationForGetter && useLombokAnnotationForSetter) {
+			return "";
+		}
 		sb.append(StringUtils.NEW_LINE);
 		for (JavaFieldDef field: aFields) {
-			sb.append(field.getFieldGetterMethod());
-			sb.append(field.getFieldSetterMethod());
+			if(!useLombokAnnotationForGetter) {
+				sb.append(field.getFieldGetterMethod());
+			}
+			if(!useLombokAnnotationForSetter) {
+				sb.append(field.getFieldSetterMethod());
+			}
 		}
 		sb.append(StringUtils.NEW_LINE);
 		return sb.toString();
