@@ -25,6 +25,10 @@ ext.libraries = [
     ],
     csvParser: [
         "org.apache.commons:commons-csv:1.10.0"
+    ],    
+    junitJupiter :[
+        "org.junit.jupiter:junit-jupiter-api:5.10.0",
+        "org.junit.jupiter:junit-jupiter-engine:5.10.0"
     ]
 ]
 

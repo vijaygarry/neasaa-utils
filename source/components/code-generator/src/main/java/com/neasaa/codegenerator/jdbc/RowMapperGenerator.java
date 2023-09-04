@@ -65,11 +65,11 @@ public class RowMapperGenerator extends AbstractJavaClassGenerator {
 		
 		StringBuilder sb = new StringBuilder();
 		String entityVarName = StringUtils.lowerFirstChar (aEntityClassName); 
-		sb.append("\t\t" +aEntityClassName).append( " " ).append( entityVarName ) .append( " = new " ).append( aEntityClassName ).append( " ();\n" );
+		sb.append("\t\t" +aEntityClassName).append( " " ).append( entityVarName ) .append( " = new " ).append( aEntityClassName ).append( "();\n" );
 		for(ColumnDefinition colDef :aTableDefinition.getColumnDefinitions()){
 			JavaFieldDef javaFieldDef = TableToJavaHelper.getJavaFieldDefFromCol( aTableDefinition, colDef );
 			String setterMethodName = javaFieldDef.getSetterMethodName();
-			sb.append("\t\t" + entityVarName).append( "." ).append( setterMethodName ) .append( " (" ).append( SqlStatementHelper.getResultSetMethod( "aRs", colDef.getDataType(), colDef.getColumnName() ) ).append( " );\n" );	
+			sb.append("\t\t" + entityVarName).append( "." ).append( setterMethodName ) .append( "(" ).append( SqlStatementHelper.getResultSetMethod( "aRs", colDef.getDataType(), colDef.getColumnName() ) ).append( ");\n" );	
 		}
 		sb.append("\t\treturn " + entityVarName).append( ";" );
 		method.addMethodImplementation(sb.toString());

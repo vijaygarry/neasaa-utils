@@ -37,7 +37,7 @@ public class JavaMethodDef {
 			}
 		}
 		sb.append("\t").append(this.accessIdentifier).append(" ").append(this.returnType);
-		sb.append(" ").append(this.methodName).append(" ( ").append(this.methodParams).append( " ) ");
+		sb.append(" ").append(this.methodName).append("(").append(this.methodParams).append( ")");
 		
 		if(this.exceptions != null && this.exceptions.size() > 0) {
 			boolean first = true;

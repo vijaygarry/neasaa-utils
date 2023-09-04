@@ -19,37 +19,39 @@ public class SqlStatementHelper {
 		switch (aJdbcType) {
 		case CHAR:
 		case VARCHAR:
-			sb.append( "setStringInStatement ");
+			sb.append( "setStringInStatement");
 			break;
 		case SMALLINT:
-			sb.append( "setSmallIntInStatement ");
+			sb.append( "setSmallIntInStatement");
 			break;
 		case BIGINT:
-			sb.append( "setLongInStatement ");
+			sb.append( "setLongInStatement");
 			break;
 		case INTEGER:
-			sb.append( "setIntInStatement ");
+			sb.append( "setIntInStatement");
 			break;
 		case FLOAT:
 		case REAL:
-			sb.append( "setFloatInStatement ");
+			sb.append( "setFloatInStatement");
 			break;
 		case DOUBLE:
-			sb.append( "setDoubleInStatement ");
+			sb.append( "setDoubleInStatement");
 			break;
 		case NUMERIC:
 		case DECIMAL:
-			sb.append( "setBigDecimalInStatement ");
+			sb.append( "setBigDecimalInStatement");
 			break;
 		case TIMESTAMP:
+			sb.append( "setTimestampInStatement");
+			break;
 		case DATE:
-			sb.append( "setTimestampInStatement ");
+			sb.append( "setDateInStatement");
 			break;
 		case BOOLEAN:
-			sb.append( "setBooleanInStatement ");
+			sb.append( "setBooleanInStatement");
 			break;
 		case BIT:
-			sb.append( "setBooleanInStatement ");
+			sb.append( "setBooleanInStatement");
 			break;
 		case TINYINT:
 		case LONGVARCHAR:
@@ -81,7 +83,7 @@ public class SqlStatementHelper {
 			throw new Exception( "Data type " + aJdbcType
 					+ " not supported by utility." + " ColIndex:" + aColIndex + ", colValue:" + aColValueString);
 		}
-		sb.append("( prepareStatement, ").append(aColIndex).append(", ").append(aColValueString).append(" );");
+		sb.append("(prepareStatement, ").append(aColIndex).append(", ").append(aColValueString).append(");");
 		return sb.toString();
 	}
 	
@@ -90,13 +92,13 @@ public class SqlStatementHelper {
 		switch (aJdbcType) {
 		case CHAR:
 		case VARCHAR:
-			return ( aResultSetVarName + ".getString( \"" + aColName + "\")");
+			return ( aResultSetVarName + ".getString(\"" + aColName + "\")");
 		case SMALLINT:
-			return ( aResultSetVarName + ".getShort( \"" + aColName + "\")");
+			return ( aResultSetVarName + ".getShort(\"" + aColName + "\")");
 		case BIGINT:
-			return ( aResultSetVarName + ".getLong( \"" + aColName + "\")");			
+			return ( aResultSetVarName + ".getLong(\"" + aColName + "\")");			
 		case INTEGER:
-			return ( aResultSetVarName + ".getInt( \"" + aColName + "\")");
+			return ( aResultSetVarName + ".getInt(\"" + aColName + "\")");
 		case FLOAT:
 		case REAL:
 			sb.append( "setFloatInStatement ");
@@ -106,14 +108,15 @@ public class SqlStatementHelper {
 			break;
 		case NUMERIC:
 		case DECIMAL:
-			return ( aResultSetVarName + ".getBigDecimal( \"" + aColName + "\")");
+			return ( aResultSetVarName + ".getBigDecimal(\"" + aColName + "\")");
 		case TIMESTAMP:
+			return ( "AbstractDao.getTimestampFromResultSet(" + aResultSetVarName + ", \"" + aColName + "\")");
 		case DATE:
-			return ( aResultSetVarName + ".getDate( \"" + aColName + "\")");
+			return ( "AbstractDao.getDateFromResultSet(" + aResultSetVarName + ", \"" + aColName + "\")");
 		case BOOLEAN:
-			return ( aResultSetVarName + ".getBoolean( \"" + aColName + "\")");
+			return ( aResultSetVarName + ".getBoolean(\"" + aColName + "\")");
 		case BIT:
-			return ( aResultSetVarName + ".getBoolean( \"" + aColName + "\")");
+			return ( aResultSetVarName + ".getBoolean(\"" + aColName + "\")");
 		case TINYINT:
 		case LONGVARCHAR:
 		case TIME:

@@ -14,12 +14,24 @@ public class DateUtils {
 	 */
 	public static final String UTC_TIME_ZONE = "UTC";
 	
-	public static Date parseDate (String aStrValue, String aDateFormat) throws ParseException {
+	public static Date parseDateInUTCTimeZone (String aStrValue, String aDateFormat) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat(aDateFormat);
+		sdf.setTimeZone(TimeZone.getTimeZone(UTC_TIME_ZONE));
+		return sdf.parse(aStrValue);
+	}
+	
+	public static Date parseDateInLocalTimeZone (String aStrValue, String aDateFormat) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat(aDateFormat);
 		return sdf.parse(aStrValue);
 	}
 	
-	public static String formatDate (Date aDateValue, String aDateFormat) {
+	public static String formatDateInUTCTimeZone (Date aDateValue, String aDateFormat) {
+		SimpleDateFormat sdf = new SimpleDateFormat(aDateFormat);
+		sdf.setTimeZone(TimeZone.getTimeZone(UTC_TIME_ZONE));
+		return sdf.format(aDateValue);
+	}
+	
+	public static String formatDateInLocalTimeZone (Date aDateValue, String aDateFormat) {
 		SimpleDateFormat sdf = new SimpleDateFormat(aDateFormat);
 		return sdf.format(aDateValue);
 	}
@@ -44,5 +56,46 @@ public class DateUtils {
 	 */
 	public static Calendar getUtcCalendarInstance () {
 		return Calendar.getInstance( TimeZone.getTimeZone( UTC_TIME_ZONE ) );
+	}
+	
+	public static Date truncateTimeInUTCTimezone (Date dateValue) {
+		Calendar cal = getUtcCalendarInstance();
+		cal.setTime(dateValue);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+	
+	public static Date truncateTimeInLocalTimezone (Date dateValue) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dateValue);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+	
+	public static Date addDays (Date dateValue, int numberOfDays) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dateValue);
+		cal.add(Calendar.DATE, numberOfDays); // Adding days
+		return cal.getTime();
+	}
+	
+	public static Date addMonths (Date dateValue, int numberOfMonths) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dateValue);
+		cal.add(Calendar.MONTH, numberOfMonths); // Adding months
+		return cal.getTime();
+	}
+	
+	public static Date addYears (Date dateValue, int numberOfYears) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dateValue);
+		cal.add(Calendar.YEAR, numberOfYears); // Adding years
+		return cal.getTime();
 	}
 }

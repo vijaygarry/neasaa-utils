@@ -75,9 +75,6 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 		classDef.addImportClass("java.sql.Connection");
 		classDef.addImportClass("java.sql.PreparedStatement");
 		
-		//addSlf4jImports(classDef);
-		//addUtilDateImport(classDef);
-
 		classDef.setClassName(className);
 
 		classDef.setParentClass(CodeGeneratorConstants.ABSTRACT_DAO_CLASS_NAME);
@@ -186,10 +183,10 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 		method.addAnnotation("@Override");
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("\t\treturn getJdbcTemplate().update( new PreparedStatementCreator() {\n");
+		sb.append("\t\treturn getJdbcTemplate().update(new PreparedStatementCreator() {\n");
 		sb.append("\t\t\t@Override\n");
 		sb.append("\t\t\tpublic PreparedStatement createPreparedStatement(Connection aCon) throws SQLException {\n");
-		sb.append("\t\t\t\treturn buildInsertStatement (aCon, a" + aEntityClassName + ");\n");
+		sb.append("\t\t\t\treturn buildInsertStatement(aCon, a" + aEntityClassName + ");\n");
 		sb.append("\t\t\t}\n");
 		sb.append("\t\t});\n");
 		
@@ -231,7 +228,7 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("\t\treturn getJdbcTemplate().update( new PreparedStatementCreator() {\n");
+		sb.append("\t\treturn getJdbcTemplate().update(new PreparedStatementCreator() {\n");
 		sb.append("\t\t\t@Override\n");
 		sb.append("\t\t\tpublic PreparedStatement createPreparedStatement(Connection aConection) throws SQLException {\n");
 		String sqlStatmentVar = "String deleteSqlQuery = \"" + buildDeleteQuery(aTableDefinition, aPrimarykeyColumns, aNonPrimarykeyColumns) + "\";\n";
@@ -243,10 +240,10 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 			index++;
 			JavaFieldDef javaFieldDef = aColumnNameToFieldMap.get(columnDef.getColumnName());
 			String getterMethodName = javaFieldDef.getGetterMethodName();
-			sb.append("\t\t\t\t").append(SqlStatementHelper.generateSetterStatement(columnDef.getDataType(), String.valueOf(index), classParamName + "." + getterMethodName + " ()"));
+			sb.append("\t\t\t\t").append(SqlStatementHelper.generateSetterStatement(columnDef.getDataType(), String.valueOf(index), classParamName + "." + getterMethodName + "()"));
 			sb.append("\n");
 		}
-		sb.append("\t\t\t\t").append("return prepareStatement;");
+		sb.append("\t\t\t\t").append("return prepareStatement;\n");
 		sb.append("\t\t\t}\n");
 		sb.append("\t\t});\n");
 		
@@ -262,7 +259,7 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 					+ ". Failed to create delete statement.");
 		}
 
-		StringBuilder query = new StringBuilder( "DELETE " );
+		StringBuilder query = new StringBuilder( "DELETE FROM " );
 
 		if ( !StringUtils.isEmpty( aTableDefinition.getSchemaName() ) ) {
 			query.append( aTableDefinition.getSchemaName() ).append( "." );
@@ -305,10 +302,10 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("\t\treturn getJdbcTemplate().update( new PreparedStatementCreator() {\n");
+		sb.append("\t\treturn getJdbcTemplate().update(new PreparedStatementCreator() {\n");
 		sb.append("\t\t\t@Override\n");
 		sb.append("\t\t\tpublic PreparedStatement createPreparedStatement(Connection aCon) throws SQLException {\n");
-		sb.append("\t\t\t\treturn buildUpdateStatement (aCon, a" + aEntityClassName + ");\n");
+		sb.append("\t\t\t\treturn buildUpdateStatement(aCon, a" + aEntityClassName + ");\n");
 		sb.append("\t\t\t}\n");
 		sb.append("\t\t});\n");
 
@@ -451,7 +448,7 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 			index++;
 			JavaFieldDef javaFieldDef = aColumnNameToFieldMap.get(columnDef.getColumnName());
 			String getterMethodName = javaFieldDef.getGetterMethodName();
-			sb.append("\t\t").append(SqlStatementHelper.generateSetterStatement(columnDef.getDataType(), String.valueOf(index), classParamName + "." + getterMethodName + " ()"));
+			sb.append("\t\t").append(SqlStatementHelper.generateSetterStatement(columnDef.getDataType(), String.valueOf(index), classParamName + "." + getterMethodName + "()"));
 			sb.append("\n");
 		}
 		
@@ -459,7 +456,7 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 			index++;
 			JavaFieldDef javaFieldDef = aColumnNameToFieldMap.get(columnDef.getColumnName());
 			String getterMethodName = javaFieldDef.getGetterMethodName();
-			sb.append("\t\t").append(SqlStatementHelper.generateSetterStatement(columnDef.getDataType(), String.valueOf(index), classParamName + "." + getterMethodName + " ()"));
+			sb.append("\t\t").append(SqlStatementHelper.generateSetterStatement(columnDef.getDataType(), String.valueOf(index), classParamName + "." + getterMethodName + "()"));
 			sb.append("\n");
 		}
 		return sb.toString();
@@ -491,7 +488,7 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 			index++;
 			 JavaFieldDef javaFieldDef = aColumnNameToFieldMap.get(columnDef.getColumnName());
 			 String getterMethodName = javaFieldDef.getGetterMethodName();
-			sb.append("\t\t").append(SqlStatementHelper.generateSetterStatement(columnDef.getDataType(), String.valueOf(index), classParamName + "." + getterMethodName + " ()"));
+			sb.append("\t\t").append(SqlStatementHelper.generateSetterStatement(columnDef.getDataType(), String.valueOf(index), classParamName + "." + getterMethodName + "()"));
 			sb.append("\n");
 		}
 		return sb.toString();

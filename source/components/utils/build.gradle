@@ -22,6 +22,7 @@ dependencies {
     implementation (libraries.jackson)
     implementation (libraries.excel)
     implementation (libraries.csvParser)
+    testImplementation (libraries.junitJupiter)
 }
 
 javadoc {
