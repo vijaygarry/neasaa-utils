@@ -1,5 +1,8 @@
 package com.neasaa.excel;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
@@ -98,19 +101,47 @@ public class ExcelSheet {
 		this.excelSheet.removeRow(aExcelRow);
 	}
 	
-	public void updateCellValue (int aRowNum, int aColumnNum, String aValue) {
-		updateCellValue (getCell ( aRowNum , aColumnNum), aValue);		
+	public void updateCellValue (int aRowNum, int aColumnNum, Object aValue) {
+		Row row = getRow(aRowNum);
+		if(row == null) {
+			row = createRow(aRowNum);
+		}
+		updateCellValue (row, aColumnNum, aValue);
 	}
 	
-	public static void updateCellValue (Row aExcelRow, int aColumnNum, String aValue) {
-		updateCellValue (getCell ( aExcelRow , aColumnNum), aValue);	
+	public void updateCellValue (Row aExcelRow, int aColumnNum, Object aValue) {
+		if(aExcelRow == null) {
+			return;
+		}
+		Cell cell = aExcelRow.getCell(aColumnNum);
+		if(cell == null) {
+			cell = aExcelRow.createCell(aColumnNum);
+		}
+		updateCellValue (cell, aValue);	
 	}
 	
-	public static void updateCellValue ( Cell aExcelCell, String aValue ) {
+	public static void updateCellValue ( Cell aExcelCell, Object aValue ) {
 		if ( aExcelCell == null ) {
 			return;
 		}
-		aExcelCell.setCellValue(aValue);
+		if(aValue instanceof Double) {
+			aExcelCell.setCellValue((double)aValue);
+		} else if(aValue instanceof BigDecimal) {
+			aExcelCell.setCellValue(((BigDecimal)aValue).doubleValue());
+		} else if(aValue instanceof Integer) {
+			aExcelCell.setCellValue((int)aValue);
+		} else if(aValue instanceof Date) {
+			aExcelCell.setCellValue((Date)aValue);
+		} else {
+			aExcelCell.setCellValue(String.valueOf(aValue));
+		}
+	}
+	
+	public void updateCellValue ( ExcelCell excelCell ) {
+		if ( excelCell == null ) {
+			return;
+		}
+		updateCellValue(excelCell.getRowNum(), excelCell.getColumnNum(), excelCell.getValue());
 	}
 	
 }

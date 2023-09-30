@@ -125,46 +125,34 @@ public class ExcelWorkBook {
 		// Reopen the file after saving to refresh the content.
 		openExcelFile(this.excelFileName);
 	}
-
-
-//	public static void main ( String[] args ) throws IOException {
-//
-//		String excelFileName = args[ 0 ];
-//		ExcelWorkBook excel = new ExcelWorkBook( excelFileName );
-//		ExcelSheet allEmailSheet = excel.getExcelSheetByName( "All Email Ids" );
-//
-//		for ( int rowNum = 0;; rowNum++ ) {
-//			Row excelRow = allEmailSheet.getRow( rowNum );
-//			String name = ExcelSheet.getCellValue( excelRow, 1 );
-//			String email = ExcelSheet.getCellValue( excelRow, 2 );
-//			if ( name == null || name.isEmpty() ) {
-//				break;
-//			}
-//			System.out.println( "Name:" + name + "  Email:" + email );
-//		}
-//	}
 	
-//	public static void main ( String[] args ) throws IOException {
-//
-//		ExcelWorkBook excel = new ExcelWorkBook( "/Users/vijay/work/Product/Neasaa/Projects/navyfcu/source/NeasaaTests/NEASAA-INF/ExcelReportTemplate.xlsx" );
-//		ExcelSheet allEmailSheet = excel.getExcelSheetByName( "AccountCreation" );
-//
-//		for ( int rowNum = 1;rowNum <= 13; rowNum++ ) {
-//			if(rowNum %2 ==0) {
-//				allEmailSheet.updateCellValue(rowNum, 2, "PASS");
-//			}
-//		}
-//		
-//		excel.save();
-//		excel = new ExcelWorkBook( "/Users/vijay/work/Product/Neasaa/Projects/navyfcu/source/NeasaaTests/NEASAA-INF/ExcelReportTemplate.xlsx" );
-//		allEmailSheet = excel.getExcelSheetByName( "AccountCreation" );
-//		
-//		for ( int rowNum = 1;rowNum <= 13; rowNum++ ) {
-//			if(rowNum %2 == 1) {
-//				allEmailSheet.updateCellValue(rowNum, 2, "FAIL");
-//			}
-//		}
-//		excel.save();
-//		
-//	}
+	/**
+	 * Create a copy of existing sheet with new name in same worksheet.
+	 * 
+	 * @param sourceSheetName
+	 * @param newSheetName
+	 * @throws Exception
+	 */
+	public void createCopyOfSheet (String sourceSheetName, String newSheetName) throws Exception {
+		ExcelSheet sourceSheet = getExcelSheetByName(sourceSheetName);
+		if(sourceSheet == null) {
+			throw new Exception ("Source sheet `" + sourceSheetName + "` not found in excel file.");
+		}
+		ExcelSheet newSheet = getExcelSheetByName(newSheetName);
+		if(newSheet != null) {
+			throw new Exception ("New sheet `" + newSheetName + "` already exists in excel file.");
+		}
+		Sheet cloneSheet = this.excelWorkBook.cloneSheet(this.excelWorkBook.getSheetIndex(sourceSheetName));
+		this.excelWorkBook.setSheetName(this.excelWorkBook.getSheetIndex(cloneSheet), newSheetName);
+	}
+	
+	/**
+	 * Delete sheet with specified name
+	 * 
+	 * @param sheetName
+	 */
+	public void deleteSheet(String sheetName) {
+		this.excelWorkBook.removeSheetAt(this.excelWorkBook.getSheetIndex(sheetName));
+	}
+
 }

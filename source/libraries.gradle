@@ -20,8 +20,8 @@ ext.libraries = [
         "com.fasterxml.jackson.core:jackson-databind:2.15.2"
     ],
     excel: [
-        "org.apache.poi:poi:5.2.3",
-        "org.apache.poi:poi-ooxml:5.2.3"
+        "org.apache.poi:poi:5.2.4",
+        "org.apache.poi:poi-ooxml:5.2.4"
     ],
     csvParser: [
         "org.apache.commons:commons-csv:1.10.0"
