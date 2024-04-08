@@ -4,9 +4,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellCopyPolicy;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 public class ExcelSheet {
 	private Sheet excelSheet;
@@ -30,7 +33,35 @@ public class ExcelSheet {
 	public Row createRow ( int aRowNum ) {
 		return this.excelSheet.createRow( aRowNum );
 	}
-
+	
+	public void copyRows(int sourceStartRowNum, int sourceEndRowNum, int destinationStartRowNum) {
+		if(this.excelSheet instanceof XSSFSheet) {
+			XSSFSheet sheet = (XSSFSheet)this.excelSheet;
+			sheet.copyRows(sourceStartRowNum, sourceEndRowNum, destinationStartRowNum, new CellCopyPolicy());
+		} else {
+			throw new RuntimeException("copyRows function is supported only for XSSFSheet. Current sheet is of type: " + this.excelSheet.getClass().getName());
+		}
+	}
+	
+	public void copyRow(int sourceRowNum, int destinationRowNum) {
+		copyRows(sourceRowNum, sourceRowNum, destinationRowNum);
+	}
+	
+	public void insertCopyRow(int sourceRowNum, int destinationRowNum) {
+		insertRowAt(destinationRowNum);
+		copyRows(sourceRowNum, sourceRowNum, destinationRowNum);
+	}
+	
+	public void insertRowAt (int rowIndex) {
+		Row newRow = getRow(rowIndex);
+		
+		// If the row exist in destination, push down all rows by 1 else create a new row
+		if (newRow != null) {
+			  this.excelSheet.shiftRows(rowIndex, this.excelSheet.getLastRowNum(), 1);
+		}
+		newRow = this.excelSheet.createRow(rowIndex);
+	}
+	
 	public String getCellValue ( int aRowNum, int aColumnNum ) {
 		return getCellValue( getCell ( aRowNum , aColumnNum));
 	}
@@ -97,8 +128,33 @@ public class ExcelSheet {
 		}
 	}
 	
+	/**
+	 * This method won't delete the row from excel instead will delete the value of
+	 * the cells in row. 
+	 * @see     #deleteRow(int)
+	 * 
+	 * @param aExcelRow
+	 */
 	public void removeRow(Row aExcelRow) {
 		this.excelSheet.removeRow(aExcelRow);
+	}
+	
+	/**
+	 * This method will delete the row from excel sheet.
+	 * 
+	 * @param rowIndex
+	 */
+	public void deleteRow(int rowIndex) {
+		int lastRowNum = this.excelSheet.getLastRowNum();
+		if (rowIndex >= 0 && rowIndex < lastRowNum) {
+			this.excelSheet.shiftRows(rowIndex + 1, lastRowNum, -1);
+		}
+		if (rowIndex == lastRowNum) {
+			Row removingRow = this.excelSheet.getRow(rowIndex);
+			if (removingRow != null) {
+				this.excelSheet.removeRow(removingRow);
+			}
+		}
 	}
 	
 	public void updateCellValue (int aRowNum, int aColumnNum, Object aValue) {
@@ -144,4 +200,15 @@ public class ExcelSheet {
 		updateCellValue(excelCell.getRowNum(), excelCell.getColumnNum(), excelCell.getValue());
 	}
 	
+	public void mergeCells(int startRow, int endRow, int startCol, int endCol) {
+		excelSheet.addMergedRegion(new CellRangeAddress(startRow, endRow, startCol, endCol));	
+	}
+	
+	public void mergeCellsInRow(int rowNum, int startCol, int endCol) {
+		excelSheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, startCol, endCol));	
+	}
+	
+	public void mergeCellsInColumn(int startRow, int endRow, int colNum) {
+		excelSheet.addMergedRegion(new CellRangeAddress(startRow, endRow, colNum, colNum));	
+	}
 }

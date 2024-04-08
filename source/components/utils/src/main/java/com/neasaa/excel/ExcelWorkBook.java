@@ -1,6 +1,7 @@
 
 package com.neasaa.excel;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,6 +13,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.neasaa.util.FileUtils;
 
 /**
  * Include following dependent jars poi-3.9-20121203.jar,
@@ -52,6 +55,13 @@ public class ExcelWorkBook {
 
 	public static ExcelWorkBook createNewFile ( String aExcelFileName )
 			throws IOException {
+		if (!FileUtils.isFileExists(aExcelFileName)) {
+			FileOutputStream out = new FileOutputStream(new File(aExcelFileName));
+			Workbook workbook = new XSSFWorkbook();
+			workbook.write(out);
+			out.close();
+			workbook.close();
+		}
 		return new ExcelWorkBook( aExcelFileName );
 	}
 
@@ -82,7 +92,7 @@ public class ExcelWorkBook {
 		default:
 			throw new RuntimeException( "Excel type <" + aExcelType + "> not supported.");
 		}
-		
+		this.excelWorkBook.setForceFormulaRecalculation(true);		
 	}
 
 
@@ -144,6 +154,16 @@ public class ExcelWorkBook {
 		}
 		Sheet cloneSheet = this.excelWorkBook.cloneSheet(this.excelWorkBook.getSheetIndex(sourceSheetName));
 		this.excelWorkBook.setSheetName(this.excelWorkBook.getSheetIndex(cloneSheet), newSheetName);
+	}
+	
+	/**
+	 * Create new sheet in this workbook by specified name
+	 * @param newSheetName
+	 * @return
+	 * @throws Exception
+	 */
+	public ExcelSheet createNewSheet (String newSheetName) throws Exception {
+		return new ExcelSheet(excelWorkBook.createSheet(newSheetName));
 	}
 	
 	/**

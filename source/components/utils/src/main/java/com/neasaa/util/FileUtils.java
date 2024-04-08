@@ -557,8 +557,7 @@ public class FileUtils {
 
 
 	public static boolean isFileExists ( String aFilename ) {
-		File tmpFile = null;
-		tmpFile = new File( aFilename );
+		File tmpFile = new File( aFilename );
 		return tmpFile.exists();
 	}
 	

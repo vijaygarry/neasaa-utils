@@ -20,3 +20,10 @@ gradle-app.setting
 **/.classpath
 **/.project
 **/bin
+source/components/logger-test/build.gradle
+source/components/logger-test/gradle.properties
+source/components/logger-test/logs/app.log
+source/components/logger-test/src/main/java/com/neasaa/logger/SimpleJavaClass.java
+source/components/logger-test/src/main/java/com/neasaa/logger/SpringLoggerTest.java
+source/components/logger-test/src/main/resources/log4j2.xml
+source/components/logger-test/src/main/resources/logger-spring-context.xml

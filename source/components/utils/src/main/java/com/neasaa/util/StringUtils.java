@@ -244,6 +244,30 @@ public class StringUtils {
 		return list;
 
 	}
+	
+	/**
+	 * Return String with comma separated values from input list.
+	 * If input list if null or empty, returns null.
+	 * 
+	 * @param aInput
+	 * @return - Returns List with parse values. Return null if input is null or empty.
+	 */
+	public static String convertListToCSVString(List<String> aInput) {
+		if(aInput == null || aInput.isEmpty()) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (String value : aInput) {
+			if(first) {
+				first = false;
+			} else {
+				sb.append(",");
+			}
+			sb.append(value);
+		}
+		return sb.toString();
+	}
 	// --------------------------------------------------------------------------
 }
 // ----------------------------------------------------------------------------

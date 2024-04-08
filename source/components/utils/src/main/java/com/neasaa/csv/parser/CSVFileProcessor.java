@@ -59,7 +59,7 @@ public class CSVFileProcessor<T> {
 				throw new RuntimeException("CSV Filepath is not specified");
 			}
 			if(!FileUtils.isFileExists(csvFilePath)) {
-				throw new RuntimeException("CSV Filepath " + csvFilePath + " does not exists");
+				throw new RuntimeException("CSV file '" + csvFilePath + "' does not exists");
 			}
 			if(rowMapper == null) {
 				throw new RuntimeException("Row mapper not specified");
