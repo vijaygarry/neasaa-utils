@@ -102,7 +102,10 @@ public class CodeGenerator {
 		for(String tableName: aTableNames) {
 			TableDefinition tableDefinition = DBMetaDataHelper.getTableDefinition (aConnection, tableName, aSchemaName);
 			String entityClassName = DbHelper.getClassNameFromTableName (tableDefinition.getTableName());
-			EntityDaoClassGenerator.generateDaoInterfaceCode(entityClassName);
+			boolean doNotGenerateDaoInterface = BaseConfig.getBooleanProperty(CodeGeneratorConstants.JAVA_DAO_DO_NOT_CREATE_INTERFACE, false);
+			if(!doNotGenerateDaoInterface) {
+				EntityDaoClassGenerator.generateDaoInterfaceCode(entityClassName);
+			}
 			EntityDaoClassGenerator.generateDaoImplCode(entityClassName, tableDefinition);
 		}
 	}

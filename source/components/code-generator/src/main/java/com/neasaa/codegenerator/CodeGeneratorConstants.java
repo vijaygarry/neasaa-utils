@@ -6,6 +6,7 @@ public interface CodeGeneratorConstants {
 	
 	String JAVA_CLASS_USE_LOMBOK_SETTER = "JAVA.CLASS.USE.LOMBOK.FOR.SETTER";
 	String JAVA_CLASS_USE_LOMBOK_GETTER = "JAVA.CLASS.USE.LOMBOK.FOR.GETTER";
+	String JAVA_DAO_DO_NOT_CREATE_INTERFACE = "JAVA.DAO.DO.NOT.CREATE.INTERFACE";
 	
 	/**
 	 * All DAO impl class will extend this class name. 

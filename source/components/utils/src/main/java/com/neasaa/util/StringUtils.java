@@ -11,8 +11,10 @@ public class StringUtils {
 	public static final String NEW_LINE = "\n";
 	private static final String TRUE_VALUE = "true";
 	private static final String YES_VALUE = "yes";
+	private static final String Y_VALUE = "y";
 	private static final String FALSE_VALUE = "false";
 	private static final String NO_VALUE = "no";
+	private static final String N_VALUE = "n";
 
 	// --------------------------------------------------------------------------
 	public static boolean isWhiteSpaceChar(char aChar) {
@@ -179,11 +181,11 @@ public class StringUtils {
 		if (aValue == null || aValue.length() == 0) {
 			throw new RuntimeException("Invalid value <" + aValue + "> to parse to boolean");
 		}
-		if (TRUE_VALUE.equalsIgnoreCase(aValue) || YES_VALUE.equalsIgnoreCase(aValue)) {
+		if (TRUE_VALUE.equalsIgnoreCase(aValue) || YES_VALUE.equalsIgnoreCase(aValue) || Y_VALUE.equalsIgnoreCase(aValue)) {
 			return true;
 		}
 
-		if (FALSE_VALUE.equalsIgnoreCase(aValue) || NO_VALUE.equalsIgnoreCase(aValue)) {
+		if (FALSE_VALUE.equalsIgnoreCase(aValue) || NO_VALUE.equalsIgnoreCase(aValue) || N_VALUE.equalsIgnoreCase(aValue)) {
 			return false;
 		}
 

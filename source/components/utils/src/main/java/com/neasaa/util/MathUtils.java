@@ -10,6 +10,9 @@ public class MathUtils {
 	public static final BigDecimal VALUE_100 = new BigDecimal(100);
 	
 	public static BigDecimal calculatePercentage (BigDecimal value, BigDecimal totalValue) {
+		if(totalValue.compareTo(ZERO_VALUE) == 0) {
+			return ZERO_VALUE;
+		}
 		BigDecimal bd = value.multiply(VALUE_100).divide(totalValue, 2, RoundingMode.HALF_UP);
 		return bd;
 	}

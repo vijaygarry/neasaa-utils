@@ -60,15 +60,23 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 		String classPackageName = interfacePackageName + ".pg";
 		String entityClassPackageName = BaseConfig.getProperty(CodeGeneratorConstants.ENTITY_CLASS_PACKAGE_CONFIG_NAME);
 		
-		String className = EntityDaoGeneratorHelper.getDaoImplName (aEntityClassName);
+		boolean doNotGenerateDaoInterface = BaseConfig.getBooleanProperty(CodeGeneratorConstants.JAVA_DAO_DO_NOT_CREATE_INTERFACE, false);
 		String daoInterfaceName = EntityDaoGeneratorHelper.getDaoInterfaceName(aEntityClassName);
+		String className = daoInterfaceName + "Impl";
+		if(doNotGenerateDaoInterface) {
+			//If we are creating Dao interface, then use dao name as interface name without impl.
+			className = daoInterfaceName;
+		}
+		
 		String javaClassFile = srcMainJavaPath + getClassFileName(classPackageName, className);
 		FileUtils.createEmptyFile(javaClassFile, false);
 
 		JavaClassDef classDef = new JavaClassDef();
 		classDef.setHeader(getCopyrightHeaderForClass());
 		classDef.setPackageName(classPackageName);
-		classDef.addImportClass(interfacePackageName + "." + daoInterfaceName);
+		if(!doNotGenerateDaoInterface) {
+			classDef.addImportClass(interfacePackageName + "." + daoInterfaceName);
+		}
 		classDef.addImportClass(entityClassPackageName + "." + aEntityClassName);
 		classDef.addImportClass("org.springframework.jdbc.core.PreparedStatementCreator");
 		classDef.addImportClass("java.sql.SQLException");
@@ -78,7 +86,9 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 		classDef.setClassName(className);
 
 		classDef.setParentClass(CodeGeneratorConstants.ABSTRACT_DAO_CLASS_NAME);
-		classDef.setInterfaces(new ArrayList<>(Arrays.asList(daoInterfaceName)));
+		if(!doNotGenerateDaoInterface) {
+			classDef.setInterfaces(new ArrayList<>(Arrays.asList(daoInterfaceName)));
+		}
 		
 		Map<String, JavaFieldDef> columnNameToFieldMap = new HashMap<>();
 		List<JavaFieldDef> fields = new ArrayList<>();
@@ -103,11 +113,12 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 
 			nonPrimarykeyColumnValues.add( colDef );
 		}
-				
-		addInsertMethod(aEntityClassName, classDef, aTableDefinition, columnNameToFieldMap);
-		addDeleteMethodImpl(classDef, aTableDefinition, columnNameToFieldMap, aEntityClassName, primarykeyColumnValues, nonPrimarykeyColumnValues);
-		addUpdateMethodImpl(classDef, aTableDefinition, columnNameToFieldMap, aEntityClassName, primarykeyColumnValues, nonPrimarykeyColumnValues);
-		addFetchMethodImpl(aEntityClassName, classDef, aTableDefinition, columnNameToFieldMap);
+		
+		boolean addOverrideAnnotation = !doNotGenerateDaoInterface;		
+		addInsertMethod(aEntityClassName, classDef, aTableDefinition, columnNameToFieldMap, addOverrideAnnotation);
+		addDeleteMethodImpl(classDef, aTableDefinition, columnNameToFieldMap, aEntityClassName, primarykeyColumnValues, nonPrimarykeyColumnValues, addOverrideAnnotation);
+		addUpdateMethodImpl(classDef, aTableDefinition, columnNameToFieldMap, aEntityClassName, primarykeyColumnValues, nonPrimarykeyColumnValues, addOverrideAnnotation);
+		addFetchMethodImpl(aEntityClassName, classDef, aTableDefinition, columnNameToFieldMap, addOverrideAnnotation);
 		
 		
 		System.out.println("Creating Dao Impl java class " + javaClassFile);
@@ -172,7 +183,7 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 //		return "fetchAll" + aEntityClassName;
 //	}
 	
-	private static void addInsertMethod (String aEntityClassName, JavaClassDef aJavaClassDef, TableDefinition aTableDefinition, Map<String, JavaFieldDef> aColumnNameToFieldMap) throws Exception {
+	private static void addInsertMethod (String aEntityClassName, JavaClassDef aJavaClassDef, TableDefinition aTableDefinition, Map<String, JavaFieldDef> aColumnNameToFieldMap, boolean addOverrideAnnotation) throws Exception {
 		addInsertStatementMethod(aJavaClassDef, aTableDefinition, aColumnNameToFieldMap, aEntityClassName);
 		
 		String classParamName = "a"+ aEntityClassName;
@@ -180,7 +191,9 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 		method.setAccessIdentifier(JavaMethodDef.PUBLIC_ACCESS_IDENTIFIER);
 		method.setReturnType("int");
 		method.addMethodException("SQLException");
-		method.addAnnotation("@Override");
+		if(addOverrideAnnotation) {
+			method.addAnnotation("@Override");
+		}
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("\t\treturn getJdbcTemplate().update(new PreparedStatementCreator() {\n");
@@ -216,14 +229,16 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 		
 	}
 	
-	private static void addDeleteMethodImpl (JavaClassDef aClassDef, TableDefinition aTableDefinition, Map<String, JavaFieldDef> aColumnNameToFieldMap, String aEntityClassName, List<ColumnDefinition> aPrimarykeyColumns, List<ColumnDefinition> aNonPrimarykeyColumns) throws Exception {
+	private static void addDeleteMethodImpl (JavaClassDef aClassDef, TableDefinition aTableDefinition, Map<String, JavaFieldDef> aColumnNameToFieldMap, String aEntityClassName, List<ColumnDefinition> aPrimarykeyColumns, List<ColumnDefinition> aNonPrimarykeyColumns, boolean addOverrideAnnotation) throws Exception {
 		
 		String classParamName = "a"+ aEntityClassName;
 		JavaMethodDef method = new JavaMethodDef(getDeleteMethodName(aEntityClassName), aEntityClassName + " " + classParamName);
 		method.setAccessIdentifier(JavaMethodDef.PUBLIC_ACCESS_IDENTIFIER);
 		method.setReturnType("int");
 		method.addMethodException("SQLException");
-		method.addAnnotation("@Override");
+		if(addOverrideAnnotation) {
+			method.addAnnotation("@Override");
+		}
 		
 		
 		StringBuilder sb = new StringBuilder();
@@ -284,7 +299,7 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 	
 	private static void addUpdateMethodImpl(JavaClassDef aClassDef, TableDefinition aTableDefinition,
 			Map<String, JavaFieldDef> aColumnNameToFieldMap, String aEntityClassName,
-			List<ColumnDefinition> aPrimarykeyColumns, List<ColumnDefinition> aNonPrimarykeyColumns) throws Exception {
+			List<ColumnDefinition> aPrimarykeyColumns, List<ColumnDefinition> aNonPrimarykeyColumns, boolean addOverrideAnnotation) throws Exception {
 
 		addBuildUpdateStatement(aClassDef, aTableDefinition, aColumnNameToFieldMap, aPrimarykeyColumns,
 				aNonPrimarykeyColumns, aEntityClassName);
@@ -294,8 +309,9 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 				aEntityClassName + " " + classParamName);
 		method.setReturnType("int");
 		method.addMethodException("SQLException");
-
-		method.addAnnotation("@Override");
+		if(addOverrideAnnotation) {
+			method.addAnnotation("@Override");
+		}
 		// method.addAnnotation("@Transactional (transactionManager=
 		// \"transactionManager\", propagation = Propagation.REQUIRED, readOnly = false,
 		// rollbackFor = Exception.class)");
@@ -387,12 +403,14 @@ public class EntityDaoClassGenerator extends AbstractJavaClassGenerator {
 		return query.toString();
 	}
 	
-	private static void addFetchMethodImpl (String aEntityClassName, JavaClassDef aJavaClassDef, TableDefinition aTableDefinition, Map<String, JavaFieldDef> aColumnNameToFieldMap) {
+	private static void addFetchMethodImpl (String aEntityClassName, JavaClassDef aJavaClassDef, TableDefinition aTableDefinition, Map<String, JavaFieldDef> aColumnNameToFieldMap, boolean addOverrideAnnotation) {
 		String entityClassParamName = "a"+ aEntityClassName;
 		JavaMethodDef method = new JavaMethodDef(getSelectMethodName (aEntityClassName), aEntityClassName + " " + entityClassParamName);
 		method.setReturnType(aEntityClassName);
 		method.addMethodException("SQLException");
-		method.addAnnotation("@Override");
+		if(addOverrideAnnotation) {
+			method.addAnnotation("@Override");
+		}
 		//method.addAnnotation("@Transactional (transactionManager= \"transactionManager\", propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Exception.class)");
 		
 		StringBuilder sb = new StringBuilder();
